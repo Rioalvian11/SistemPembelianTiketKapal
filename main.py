@@ -1,7 +1,7 @@
 import mysql.connector
 
 conn = mysql.connector.connect(
-    host="localhost", port=3306, user="root", password="", database="pbo_project")
+    host="localhost", port=3306, user="root", password="", database="pbo_projectt")
 cursor = conn.cursor()
 
 if conn.is_connected():
@@ -15,7 +15,15 @@ class Customer:
         cursor.execute(query)
         dataTabel = cursor.fetchall()
         for data in dataTabel:
-            print(data)
+            print("ID Customer   : ", data[0])
+            print("Nama          : ", data[1])
+            print("Jenis Kelamin : ", data[2])
+            print("Nomor Telepon : ", data[3])
+            print("Kota          : ", data[4])
+            print("Email         : ", data[5])
+            print("Username      : ", data[6])
+            print("Password      : ", data[7])
+            break
 
     def regis():
         nama_lengkap = input('Masukkan Nama Lengkap : ')
@@ -52,7 +60,8 @@ class Tiket(Customer) :
         tanggal_keberangkatan = input('Masukkan Tanggal Keberangkatan : ')
         waktu = int(input('Masukkan Waktu : '))
         jumlah_penumpang = int(input('Masukkan Jumlah Penumpang : '))
-        harga = int(input("Masukkan harga tiket : "))
+        # harga = int(input("Masukkan harga tiket : "))
+        harga = jumlah_penumpang * 30000
         query = "INSERT INTO data_tiket (tanggal_keberangkatan, waktu, jumlah_penumpang, harga) VALUES ('{}','{}','{}','{}')".format(
             tanggal_keberangkatan, waktu, jumlah_penumpang, harga)
         cursor.execute(query)
@@ -64,12 +73,12 @@ class Tiket(Customer) :
         cursor.execute(query)
         dataTabel = cursor.fetchall()
         for data in dataTabel:
-            print(data)
-        query_data = "SELECT * FROM data_tiket WHERE id_tiket = '{}'".format(id_customer)
-        cursor.execute(query_data)
-        dataTabel = cursor.fetchall()
-        for data in dataTabel:
-            print(data)
+            print("ID Tiket              : ", data[4])
+            print("Tanggal Keberangkatan : ", data[0])
+            print("Waktu                 : ", data[1])
+            print("Jumlah Penumpang      : ", data[2])
+            print("Harga                 : ", data[3])
+
 
 
 def login():
@@ -84,8 +93,9 @@ def login():
 
 id_customer = None
 
+
 while True:
-    print(conn)
+    print("=====SELAMAT DATANG DI SIPTIKA=====")
     print("Pilihan Menu : \n 1. Lihat Akun \n 2. Ubah Akun \n 3. Beli Tiket \n 4. Lihat Tiket \n 5. Register \n 6. Login \n 7. Keluar")
     pilihan = int(input("Masukkan Pilihan Anda : "))
     if pilihan == 1 and id_customer:
