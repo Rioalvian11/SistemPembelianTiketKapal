@@ -9,9 +9,17 @@ if conn.is_connected():
 
 
 class Customer:
+    def custom(self, nama_lengkap, jenis_kelamin, nomor_telepon, kota_asal, email, username, password):
+        self.nama_lengkap = nama_lengkap
+        self.jenis_kelamin = jenis_kelamin
+        self.nomor_telepon = nomor_telepon
+        self.kota_asal = kota_asal
+        self.email = email
+        self.username = username
+        self.password = password
+
     def lihat_akun(id_customer):
-        query = "SELECT * FROM customer WHERE id_customer = {}".format(
-            id_customer)
+        query = "SELECT * FROM customer WHERE id_customer = {}".format(id_customer)
         cursor.execute(query)
         dataTabel = cursor.fetchall()
         for data in dataTabel:
@@ -25,16 +33,9 @@ class Customer:
             print("Password      : ", data[7])
             break
 
-    def regis():
-        nama_lengkap = input('Masukkan Nama Lengkap : ')
-        jenis_kelamin = input('Masukkan Jenis Kelamin (Pria/Wanita) : ')
-        nomor_telepon = input('Masukkan Nomor Telepon : ')
-        kota_asal = input('Masukkan Kota : ')
-        email = input('Masukkan Email: ')
-        username = input('Masukkan Username : ')
-        password = input('Masukkan Password : ')
+    def regis(self):
         query = "INSERT INTO customer (nama_lengkap, jenis_kelamin, nomor_telepon, kota_asal, email, username, password) VALUES ('{}','{}','{}','{}','{}','{}','{}')".format(
-            nama_lengkap, jenis_kelamin, nomor_telepon, kota_asal, email, username, password)
+            self.nama_lengkap, self.jenis_kelamin, self.nomor_telepon, self.kota_asal, self.email, self.username, self.password)
         cursor.execute(query)
         conn.commit()
         print("data berhasil ditambahkan")
@@ -49,21 +50,21 @@ class Customer:
         password = input('Masukkan Password : ')
         query = "UPDATE customer SET nama_lengkap = '{}', jenis_kelamin = '{}', nomor_telepon = '{}', kota_asal = '{}', email = '{}', username = '{}', password = '{}' WHERE id_customer = '{}'".format(
             nama_lengkap, jenis_kelamin, nomor_telepon, kota_asal, email, username, password, id_customer)
-        print(query)
         cursor.execute(query)
         conn.commit()
         print("data berhasil dirubah")
 
 
 class Tiket(Customer) :
-    def beli_tiket() :
-        tanggal_keberangkatan = input('Masukkan Tanggal Keberangkatan : ')
-        waktu = int(input('Masukkan Waktu : '))
-        jumlah_penumpang = int(input('Masukkan Jumlah Penumpang : '))
-        # harga = int(input("Masukkan harga tiket : "))
-        harga = jumlah_penumpang * 30000
+    def tiket(self, tanggal_keberangkatan, waktu, jumlah_penumpang):
+        self.tanggal_keberangkatan = tanggal_keberangkatan
+        self.waktu = waktu
+        self.jumlah_penumpang = jumlah_penumpang
+
+    def beli_tiket(self) :
+        harga = self.jumlah_penumpang * 30000
         query = "INSERT INTO data_tiket (tanggal_keberangkatan, waktu, jumlah_penumpang, harga) VALUES ('{}','{}','{}','{}')".format(
-            tanggal_keberangkatan, waktu, jumlah_penumpang, harga)
+            self.tanggal_keberangkatan, self.waktu, self.jumlah_penumpang, harga)
         cursor.execute(query)
         conn.commit()
         print('Terimakasih Telah membeli Tiket')
@@ -95,6 +96,8 @@ id_customer = None
 
 
 while True:
+    Customer1 = Customer()
+    Tiket1 = Tiket()
     print("=====SELAMAT DATANG DI SIPTIKA=====")
     print("Pilihan Menu : \n 1. Lihat Akun \n 2. Ubah Akun \n 3. Beli Tiket \n 4. Lihat Tiket \n 5. Register \n 6. Login \n 7. Keluar")
     pilihan = int(input("Masukkan Pilihan Anda : "))
@@ -103,11 +106,25 @@ while True:
     elif pilihan == 2 and id_customer:
         Customer.update_akun(id_customer)
     elif pilihan == 3 and id_customer:
-        Tiket.beli_tiket()
+        Tiket1.tiket(
+        input('Masukkan Tanggal Keberangkatan : '),
+        int(input('Masukkan Waktu : ')),
+        int(input('Masukkan Jumlah Penumpang : '))
+        )
+        Tiket1.beli_tiket()
     elif pilihan == 4 and id_customer:
         Tiket.lihat_tiket(id_customer)
     elif pilihan == 5:
-        Customer.regis()
+        Customer1.custom(
+        input('Masukkan Nama Lengkap : '),
+        input('Masukkan Jenis Kelamin (Pria/Wanita) : '),
+        input('Masukkan Nomor Telepon : '),
+        input('Masukkan Kota : '),
+        input('Masukkan Email: '),
+        input('Masukkan Username : '),
+        input('Masukkan Password : ')
+        )
+        Customer1.regis()
     elif pilihan == 6:
         id_customer = login()
     elif pilihan == 7:
